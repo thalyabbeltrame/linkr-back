@@ -1,13 +1,14 @@
-import { getUserByEmail } from '../repositories/usersRepository.js'
+import { getUserByEmail, createUser as newUser } from '../repositories/usersRepository.js'
 
 export const createUser = async (req, res) => {
-    const { name, email, password, image } = req.body;
+    const { username, email, password, image } = req.body;
     try {
         const { rows: user } = await getUserByEmail(email)
         if (user[0]) {
             return res.sendStatus(409);
         }
-        console.log("deu certo")
+        await newUser(username, email, password, image);
+        res.sendStatus(201);
     } catch (error) {
         console.log(error);
         return res.sendStatus(500);
