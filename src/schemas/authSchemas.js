@@ -7,3 +7,8 @@ export const signUpSchema = Joi.object({
   image: Joi.string().uri().required()
 })
 
+export const signInSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
+  })
+  
