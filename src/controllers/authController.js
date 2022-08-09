@@ -30,7 +30,10 @@ export const allowLogin = async (req, res) => {
     }
     const token = createToken({ id: user[0].id, email, password });
     const userData = {
-      username: user[0].username,
+      user: {
+        username: user[0].username,
+        image: user[0].picture_url
+      },
       token: `Bearer ${token}`,
     };
     res.send(userData);
