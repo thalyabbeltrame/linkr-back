@@ -10,8 +10,25 @@ export const createUser = async (username, email, password, image) => {
   const passwordHash = bcrypt.hashSync(password, 10);
   return connection.query(
     `
-      INSERT INTO users (username, email, password, picture_url) 
+      INSERT INTO users (username, email, password, avatar) 
       VALUES ($1, $2, $3,$4)`,
     [username, email, passwordHash, image]
   );
 };
+
+export const getUsersListByName = async (name) => {
+  return connection.query(
+    `
+    SELECT * FROM users 
+    WHERE users.username 
+    LIKE '${name}%'
+    `
+  )
+}
+export const getUserById = async (id) => {
+  return connection.query(
+    `
+      SELECT * FROM users WHERE id = $1
+    `, [id]
+  )
+}
