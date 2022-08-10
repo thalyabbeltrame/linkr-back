@@ -14,7 +14,7 @@ const validateToken = async (req, res, next) => {
   try {
     const token = authorization.replace('Bearer ', '');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await usersRepository.getUserById(decoded.userId);
+    const user = await usersRepository.getUserById(decoded.id);
 
     if (!user) {
       return res.status(401).json({
