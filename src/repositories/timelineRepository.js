@@ -5,10 +5,10 @@ export const getPosts = async () => {
     `
       SELECT
         p.id,
-        p.url,
-        p.description,
+        p.link,
+        p.text,
         u.username,
-        u.picture_url
+        u.avatar
       FROM posts p
       JOIN users u ON u.id = p.user_id
       ORDER BY p.created_at DESC
