@@ -26,10 +26,11 @@ const validateToken = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({
+    res.status(501).json({
       error: error.message,
     });
   }
 };
 
 export default validateToken;
+

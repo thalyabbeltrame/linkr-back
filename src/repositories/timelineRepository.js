@@ -16,3 +16,13 @@ export const getPosts = async () => {
     `
   );
 };
+
+export const postPosts = async (link, text, user_id) => {
+  const { rows: publish } = await connection.query(`
+  INSERT INTO posts
+  (link, text, user_id)
+  VALUES ($1, $2, $3)
+`, [link, text, user_id]
+  );
+  return publish;
+};
