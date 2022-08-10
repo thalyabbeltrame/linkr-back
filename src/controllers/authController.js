@@ -32,7 +32,7 @@ export const allowLogin = async (req, res) => {
     const userData = {
       user: {
         username: user[0].username,
-        image: user[0].picture_url
+        image: user[0].avatar
       },
       token: `Bearer ${token}`,
     };
