@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
+import { createToken } from '../utils/jwtToken.js';
 
 import {
-  getUserByEmail,
-  createUser as newUser,
+  createUser as newUser, getUserByEmail
 } from '../repositories/usersRepository.js';
-import { createToken } from '../utils/jwtToken.js';
+
 
 export const createUser = async (req, res) => {
   const { username, email, password, image } = req.body;

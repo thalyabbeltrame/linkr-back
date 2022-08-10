@@ -14,22 +14,23 @@ const validateToken = async (req, res, next) => {
   try {
     const token = authorization.replace('Bearer ', '');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await usersRepository.getUserById(decoded.id);
+    const { rows: users } = await usersRepository.getUserById(decoded.id);
 
-    if (!user) {
+    if (!users[0]) {
       return res.status(401).json({
         error: 'Unauthorized',
       });
     }
 
-    res.locals.userId = user.id;
+    res.locals.userId = users[0].id;
 
     next();
   } catch (error) {
-    res.status(500).json({
+    res.status(501).json({
       error: error.message,
     });
   }
 };
 
 export default validateToken;
+

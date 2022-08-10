@@ -1,0 +1,1 @@
+**This repository was developed as Driven Education's 17th project using React and some complementary libs. It is a social network for sharing links.**

@@ -10,3 +10,14 @@ export const catchPosts = async (_req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const publishPosts = async (req, res) => {
+  const { link, text } = req.body;
+  const { userId } = res.locals;
+  try {
+    await timelineRepository.postPosts(link, text,userId);
+    res.status(200).json("Ok");
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
