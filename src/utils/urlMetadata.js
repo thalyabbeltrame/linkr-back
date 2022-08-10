@@ -1,17 +1,10 @@
 import urlMetadata from 'url-metadata';
 
-export const getFormattedPosts = async (posts) => {
-  const formattedPosts = await Promise.all(
-    posts.map(async (post) => {
-      const metadata = await urlMetadata(post.link);
-      return {
-        ...post,
-        title: metadata.title,
-        image: metadata.image,
-        description: metadata.description,
-      };
-    })
-  );
-
-  return formattedPosts;
+export const getMetadatas = async (link) => {
+  const metadatas = await urlMetadata(link);
+  return {
+    title: metadatas.title,
+    image: metadatas.image,
+    description: metadatas.description,
+  };
 };
