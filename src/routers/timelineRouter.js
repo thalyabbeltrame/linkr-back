@@ -5,6 +5,6 @@ import validateToken from '../middlewares/tokenMiddleware.js';
 
 const timelineRouter = Router();
 
-timelineRouter.get('/timeline', catchPosts);
+timelineRouter.get('/timeline', validateToken, catchPosts);
 
 export default timelineRouter;
