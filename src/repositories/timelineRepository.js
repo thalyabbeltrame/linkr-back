@@ -1,7 +1,7 @@
 import connection from '../database/postgres.js';
 
 export const getPosts = async () => {
-  const { rows: posts } = await connection.query(
+  return await connection.query(
     `
       SELECT
         p.id,
@@ -15,8 +15,6 @@ export const getPosts = async () => {
       LIMIT 20
     `
   );
-
-  return posts;
 };
 
 export const postPosts = async (link, text, user_id) => {
