@@ -1,7 +1,7 @@
 import { stripHtml } from 'string-strip-html';
 
 const sanitizeDatas = (req, _res, next) => {
-  if (!req.body) return next();
+  if (!req.body) next();
 
   Object.keys(req.body).forEach((key) => {
     if (typeof req.body[key] === 'string') {
@@ -9,7 +9,7 @@ const sanitizeDatas = (req, _res, next) => {
     }
   });
 
-  return next();
+  next();
 };
 
 export default sanitizeDatas;
