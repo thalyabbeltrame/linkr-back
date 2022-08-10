@@ -8,21 +8,36 @@ export const getPosts = async () => {
         p.link,
         p.text,
         u.username,
-        u.avatar
+        u.avatar,
+        m.title,
+        m.image,
+        m.description
       FROM posts p
       JOIN users u ON u.id = p.user_id
+      JOIN metadatas m ON m.post_id = p.id
       ORDER BY p.created_at DESC
       LIMIT 20
     `
   );
 };
 
-export const postPosts = async (link, text, user_id) => {
-  const { rows: publish } = await connection.query(`
-  INSERT INTO posts
-  (link, text, user_id)
-  VALUES ($1, $2, $3)
-`, [link, text, user_id]
+export const postPosts = async (link, text, userId) => {
+  return await connection.query(
+    `
+      INSERT INTO posts (link, text, user_id)
+      VALUES ($1, $2, $3) RETURNING id
+    `,
+    [link, text, userId]
   );
-  return publish;
+};
+
+export const postMetadatas = async (metadatas, postId) => {
+  const { title, image, description } = metadatas;
+  await connection.query(
+    `
+      INSERT INTO metadatas (title, image, description, post_id)
+      VALUES ($1, $2, $3, $4)
+    `,
+    [title, image, description, postId]
+  );
 };
