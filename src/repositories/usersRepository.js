@@ -25,6 +25,7 @@ export const getUsersListByName = async (name) => {
     `
   )
 }
+
 export const getUserById = async (id) => {
   return connection.query(
     `
