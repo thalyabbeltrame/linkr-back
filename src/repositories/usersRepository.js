@@ -15,3 +15,21 @@ export const createUser = async (username, email, password, image) => {
     [username, email, passwordHash, image]
   );
 };
+
+export const getUsersListByName = async (name) => {
+  return connection.query(
+    `
+    SELECT * FROM users 
+    WHERE users.username 
+    LIKE '${name}%'
+    `
+  )
+}
+
+export const getUserById = async (id) => {
+  return connection.query(
+    `
+      SELECT * FROM users WHERE id = $1
+    `, [id]
+  )
+}
