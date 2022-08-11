@@ -9,16 +9,10 @@ export const handleHashtags = async (hashtags, text, postId) => {
   try {
     hashtagsList?.forEach(async (hashtag) => {
       const hashtagExists = hashtags?.some((h) => h.name === hashtag);
-      if (!hashtagExists) {
-        const { rows: hashtags } = await hashtagsRepository.postHashtags(
-          hashtag
-        );
-      } else {
-        const { rows: hashtags } = await hashtagsRepository.getHashtagByName(
-          hashtag
-        );
-      }
-      await hashtagsRepository.postHashtagsRelations(hashtags[0].id, postId);
+      const { rows } = !hashtagExists
+        ? await hashtagsRepository.postHashtags(hashtag)
+        : await hashtagsRepository.getHashtagByName(hashtag);
+      await hashtagsRepository.postHashtagsRelations(rows[0].id, postId);
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
