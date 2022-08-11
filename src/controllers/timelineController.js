@@ -1,5 +1,6 @@
 import * as hashtagsRepository from '../repositories/hashtagsRepository.js';
 import * as timelineRepository from '../repositories/timelineRepository.js';
+import { handleHashtags } from '../utils/handleHashtags.js';
 import { getMetadatas } from '../utils/urlMetadata.js';
 
 export const catchPosts = async (_req, res) => {
