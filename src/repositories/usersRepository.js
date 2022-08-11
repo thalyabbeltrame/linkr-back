@@ -28,16 +28,21 @@ export const getUsersListByName = async (name) => {
 export const getPostsByUser = async (id) => {
   return connection.query(
     `
-      SELECT
-      p.id,
-      p.link,
-      p.text,
-      u.username,
-      u.avatar
-    FROM posts p
-    JOIN users u ON u.id = p.user_id
-    WHERE u.id = $1
-    ORDER BY p.created_at DESC
+        SELECT
+        p.id,
+        p.link,
+        p.text,
+        u.username,
+        u.avatar,
+        m.title,
+        m.image,
+        m.description
+      FROM posts p
+      JOIN users u ON u.id = p.user_id
+      JOIN metadatas m ON m.post_id = p.id
+      WHERE u.id = $1
+      ORDER BY p.created_at DESC
+      LIMIT 20
     `,[id]
   )
 }
