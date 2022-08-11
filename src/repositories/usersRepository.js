@@ -21,8 +21,29 @@ export const getUsersListByName = async (name) => {
     `
     SELECT * FROM users 
     WHERE users.username 
-    LIKE '${name}%'
+    ILIKE '${name}%'
     `
+  )
+}
+export const getPostsByUser = async (id) => {
+  return connection.query(
+    `
+        SELECT
+        p.id,
+        p.link,
+        p.text,
+        u.username,
+        u.avatar,
+        m.title,
+        m.image,
+        m.description
+      FROM posts p
+      JOIN users u ON u.id = p.user_id
+      JOIN metadatas m ON m.post_id = p.id
+      WHERE u.id = $1
+      ORDER BY p.created_at DESC
+      LIMIT 20
+    `,[id]
   )
 }
 
