@@ -1,3 +1,4 @@
+import * as hashtagsRepository from '../repositories/hashtagsRepository.js';
 import * as timelineRepository from '../repositories/timelineRepository.js';
 import { getMetadatas } from '../utils/urlMetadata.js';
 
@@ -21,9 +22,11 @@ export const publishPosts = async (req, res) => {
       text,
       userId
     );
-
     const metadatas = await getMetadatas(link);
     await timelineRepository.postMetadatas(metadatas, posts[0].id);
+
+    const { rows: hashtags } = await hashtagsRepository.getHashtags();
+    await handleHashtags(hashtags, text, posts[0].id);
 
     res.status(200).send('Ok');
   } catch (error) {
