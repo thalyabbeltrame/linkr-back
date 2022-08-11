@@ -11,12 +11,27 @@ export const getPosts = async () => {
         u.avatar,
         m.title,
         m.image,
-        m.description
+        m.description,
+        (
+          SELECT 
+            CASE
+              WHEN COUNT(*) > 0 THEN
+              json_agg(json_build_object(
+                'userId', u.id,
+                'username', u.username
+              ))
+              ELSE
+              '[]'
+            END
+          FROM likes l
+          JOIN users u ON u.id = l.user_id
+          WHERE l.post_id = p.id
+        ) AS likes
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
       ORDER BY p.created_at DESC
-      LIMIT 20
+      LIMIT 20      
     `
   );
 };
