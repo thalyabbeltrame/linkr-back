@@ -42,6 +42,7 @@ export const postMetadatas = async (metadatas, postId) => {
   );
 };
 
+
 export const deleteMetaDataQuery = async (id) => {
   return connection.query(
     `DELETE FROM metadatas 
