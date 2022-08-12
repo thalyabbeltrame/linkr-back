@@ -1,5 +1,5 @@
 import { getUsersListByName as getUser, getPostsByUser, getUserById } from "../repositories/usersRepository.js"
-import { getMetadatas } from '../utils/urlMetadata.js';
+
 
 export async function getUsersListByName(req, res) {
     const { name } = req.params;
