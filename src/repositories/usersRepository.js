@@ -23,8 +23,8 @@ export const getUsersListByName = async (name) => {
     WHERE users.username 
     ILIKE '${name}%'
     `
-  )
-}
+  );
+};
 export const getPostsByUser = async (id) => {
   return connection.query(
     `
@@ -43,15 +43,16 @@ export const getPostsByUser = async (id) => {
       WHERE u.id = $1
       ORDER BY p.created_at DESC
       LIMIT 20
-    `,[id]
-  )
-}
+    `,
+    [id]
+  );
+};
 
 export const getUserById = async (id) => {
   return connection.query(
     `
       SELECT * FROM users WHERE id = $1
-    `, [id]
-  )
-}
-
+    `,
+    [id]
+  );
+};
