@@ -1,11 +1,7 @@
 import { Router } from 'express';
 
-import {
-  getUserPostsById,
-  getUsersListByName,
-} from '../controllers/usersController.js';
-import validateToken from '../middlewares/tokenMiddleware.js';
 import {getUsersListByName, getUserAndPostsById} from "../controllers/usersContoller.js"
+import validateToken from '../middlewares/tokenMiddleware.js';
 
 const userRouter = Router();
 
