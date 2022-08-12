@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { catchPosts, publishPosts } from '../controllers/timelineController.js';
+import { catchPosts, deletePosts, publishPosts } from '../controllers/timelineController.js';
 import validateToken from '../middlewares/tokenMiddleware.js';
 import { validateSchema } from '../middlewares/schemaValidate.js';
 import { postSchema } from '../schemas/postSchemas.js';
@@ -15,5 +15,9 @@ timelineRouter.post(
     validateToken,
     validateSchema(postSchema),
     publishPosts);
+timelineRouter.delete(
+    '/delete/:id',
+    validateToken,
+    deletePosts);
 
 export default timelineRouter;
