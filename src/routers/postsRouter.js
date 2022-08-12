@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import validateToken from '../middlewares/tokenMiddleware.js';
 import { likeDislikePost } from '../controllers/postsController.js';
+import validateToken from '../middlewares/tokenMiddleware.js';
 
 const postsRouter = Router();
 

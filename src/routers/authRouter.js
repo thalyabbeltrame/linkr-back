@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { validateSchema } from '../middlewares/schemaValidate.js';
-import sanitizeDatas from '../middlewares/dataSanitizationMiddleware.js';
-import { signUpSchema, signInSchema } from '../schemas/authSchemas.js';
 import { allowLogin, createUser } from '../controllers/authController.js';
+import sanitizeDatas from '../middlewares/dataSanitizationMiddleware.js';
+import { validateSchema } from '../middlewares/schemaValidate.js';
+import { signInSchema, signUpSchema } from '../schemas/authSchemas.js';
 
 const authRouter = Router();
 
