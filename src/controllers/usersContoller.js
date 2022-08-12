@@ -19,11 +19,12 @@ export async function getUserPostsById(req, res) {
     if (!id) {
         return res.status(403).send("Param can be not empaty");
     }
-    //try {
+    console.log(id)
+    try {
         const { rows: posts_list } = await getPostsByUser(id);
         res.status(200).send(posts_list)
-    //} catch (error) {
-        //res.sendStatus(500)
-    //}
+    } catch (error) {
+        res.sendStatus(500)
+    }
 
 }
