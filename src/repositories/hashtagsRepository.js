@@ -34,6 +34,6 @@ export const getHashTagsTrending = async () => {
   ORDER BY total 
   DESC 
   LIMIT(10)
-  `
+  `;
   return await connection.query(query);
 };

@@ -41,7 +41,7 @@ export const deletePosts = async (req, res) => {
     await timelineRepository.deletePostQuery(id);
     res.status(200).send('Deleted');
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };

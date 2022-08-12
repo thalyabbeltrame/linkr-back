@@ -2,9 +2,9 @@ import bcrypt from 'bcrypt';
 import { createToken } from '../utils/jwtToken.js';
 
 import {
-  createUser as newUser, getUserByEmail
+  createUser as newUser,
+  getUserByEmail,
 } from '../repositories/usersRepository.js';
-
 
 export const createUser = async (req, res) => {
   const { username, email, password, image } = req.body;
@@ -32,7 +32,7 @@ export const allowLogin = async (req, res) => {
     const userData = {
       user: {
         username: user[0].username,
-        image: user[0].avatar
+        image: user[0].avatar,
       },
       token: `Bearer ${token}`,
     };

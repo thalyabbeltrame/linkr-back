@@ -1,7 +1,7 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
-import "./config/index.js";
-import app from "./app.js";
+import app from './app.js';
+import './config/index.js';
 
 const port = process.env.PORT || 5000;
 
