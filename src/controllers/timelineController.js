@@ -6,6 +6,7 @@ import { getMetadatas } from '../utils/urlMetadata.js';
 export const catchPosts = async (_req, res) => {
   try {
     const { rows: posts } = await timelineRepository.getPosts();
+    console.log(posts)
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -35,10 +36,11 @@ export const publishPosts = async (req, res) => {
 };
 
 export const deletePosts = async (req, res) => {
-  const { id } = req.params;
+  const { id: postId } = req.params;
   try {
-    await timelineRepository.deleteMetaDataQuery(id);
-    await timelineRepository.deletePostQuery(id);
+    await timelineRepository.deleteMetaDataByPostId(postId);
+    await timelineRepository.deleteHashTagsPostsByPostId(postId);
+    await timelineRepository.deletePostById(postId);
     res.status(200).send('Deleted');
   } catch (error) {
     console.log(error);

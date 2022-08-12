@@ -57,14 +57,23 @@ export const postMetadatas = async (metadatas, postId) => {
   );
 };
 
-export const deleteMetaDataQuery = async (id) => {
+export const deleteMetaDataByPostId = async (id) => {
   return connection.query(
     `DELETE FROM metadatas 
     WHERE post_id = $1;`,
     [id]
   );
 };
-export const deletePostQuery = async (id) => {
+
+export const deleteHashTagsPostsByPostId = async (postId) => {
+  return connection.query(
+    `DELETE FROM hashtags_posts 
+    WHERE post_id = $1;`,
+    [postId]
+  );
+};
+
+export const deletePostById = async (id) => {
   return connection.query(
     `DELETE FROM posts 
     WHERE id = $1;`,
