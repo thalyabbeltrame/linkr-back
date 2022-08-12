@@ -1,9 +1,7 @@
 import { Router } from 'express';
 
 import { catchPosts, deletePosts, publishPosts } from '../controllers/timelineController.js';
-import validateToken from '../middlewares/tokenMiddleware.js';
 
-import { catchPosts, publishPosts } from '../controllers/timelineController.js';
 import sanitizeDatas from '../middlewares/dataSanitizationMiddleware.js';
 
 import { validateSchema } from '../middlewares/schemaValidate.js';
