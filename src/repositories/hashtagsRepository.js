@@ -24,58 +24,28 @@ export const postHashtagsRelations = async (hashtagId, postId) => {
   );
 };
 
-export const getHashTagsTrending = async () => {
-  const query = `
-    SELECT 
-      h.id, 
-      h.name as hash_tag, 
-      count(hp.hashtag_id) as total 
-    FROM hashtags h 
-    JOIN hashtags_posts hp ON h.id  = hp.hashtag_id
-    GROUP BY h.name, h.id 
-    ORDER BY total DESC 
-    LIMIT(10)
-  `;
-  return await connection.query(query);
-};
-
-export const getPostsByHashtag = async (hashtag) => {
+export const getHashtagsTrending = async () => {
   return await connection.query(
     `
-      SELECT
-        p.id,
-        p.link,
-        p.text,
-        u.id AS user_id,
-        u.username,
-        u.avatar,
-        m.title,
-        m.image,
-        m.description,
-        (
-          SELECT 
-            CASE
-              WHEN COUNT(*) > 0 THEN
-              json_agg(json_build_object(
-                'userId', u.id,
-                'username', u.username
-              ))
-              ELSE
-              '[]'
-            END
-          FROM likes l
-          JOIN users u ON u.id = l.user_id
-          WHERE l.post_id = p.id
-        ) AS likes
-      FROM posts p
-      JOIN users u ON u.id = p.user_id
-      JOIN metadatas m ON m.post_id = p.id
-      JOIN hashtags_posts hp ON hp.post_id = p.id
-      JOIN hashtags h ON h.id = hp.hashtag_id
-      WHERE h.name = $1
-      ORDER BY p.created_at DESC
-      LIMIT 20
+      SELECT 
+        h.id, 
+        h.name as hash_tag, 
+        count(hp.hashtag_id) as total 
+      FROM hashtags h 
+      JOIN hashtags_posts hp ON h.id  = hp.hashtag_id
+      GROUP BY h.name, h.id 
+      ORDER BY total DESC 
+      LIMIT(10)
+    `
+  );
+};
+
+export const deleteHashtagsPostsByPostId = async (postId) => {
+  return connection.query(
+    `
+      DELETE FROM hashtags_posts 
+      WHERE post_id = $1
     `,
-    [hashtag]
+    [postId]
   );
 };
