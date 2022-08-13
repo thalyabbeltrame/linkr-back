@@ -4,11 +4,11 @@ import {
   catchPosts,
   deletePosts,
   getPostsByHashtag,
+  getPostsByUserId,
   likeDislikePost,
   publishPosts,
-  getPostsByUserId,
+  updatePostDescription,
 } from '../controllers/postsController.js';
-
 import { sanitizeDatas } from '../middlewares/dataSanitizationMiddleware.js';
 import { validateSchema } from '../middlewares/schemaValidate.js';
 import { validateToken } from '../middlewares/tokenMiddleware.js';
@@ -28,5 +28,6 @@ postsRouter.delete('/delete/:id', validateToken, deletePosts);
 postsRouter.post('/posts/:id/likeDislike', validateToken, likeDislikePost);
 postsRouter.get('/hashtag/:hashtag', validateToken, getPostsByHashtag);
 postsRouter.get('/user-posts/:id', getPostsByUserId);
+postsRouter.put('/post/update/:postId', validateToken, updatePostDescription);
 
 export default postsRouter;

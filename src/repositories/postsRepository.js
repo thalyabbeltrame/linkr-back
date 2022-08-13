@@ -135,3 +135,24 @@ export const deletePostById = async (id) => {
     [id]
   );
 };
+
+export const updatePostDescription = async (postId, text) => {
+  return await connection.query(
+    `
+      UPDATE posts SET text = $1 
+      WHERE id = $2
+    `,
+    [text, postId]
+  );
+};
+
+export const getPostUser = async (postId) => {
+  return await connection.query(
+    `
+      SELECT p.user_id  
+      FROM posts p  
+      WHERE p.id = $1
+    `,
+    [postId]
+  );
+};
