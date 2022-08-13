@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import authRouter from './authRouter.js';
-import hashTagsRouter from './hashTags.js';
+import hashTagsRouter from './hashTagsRouter.js';
 import postsRouter from './postsRouter.js';
 import timelineRouter from './timelineRouter.js';
 import userRouter from './usersRouter.js';
