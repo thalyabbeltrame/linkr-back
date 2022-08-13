@@ -1,19 +1,16 @@
 import bcrypt from 'bcrypt';
-import { createToken } from '../utils/jwtToken.js';
 
-import {
-  createUser as newUser,
-  getUserByEmail,
-} from '../repositories/usersRepository.js';
+import * as usersRepository from '../repositories/usersRepository.js';
+import { createToken } from '../utils/jwtToken.js';
 
 export const createUser = async (req, res) => {
   const { username, email, password, image } = req.body;
   try {
-    const { rows: user } = await getUserByEmail(email);
+    const { rows: user } = await usersRepository.getUserByEmail(email);
     if (user[0]) {
       return res.sendStatus(409);
     }
-    await newUser(username, email, password, image);
+    await usersRepository.createUser(username, email, password, image);
     res.sendStatus(201);
   } catch (error) {
     console.log(error);
@@ -24,7 +21,7 @@ export const createUser = async (req, res) => {
 export const allowLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const { rows: user } = await getUserByEmail(email);
+    const { rows: user } = await usersRepository.getUserByEmail(email);
     if (!user[0] || !bcrypt.compareSync(password, user[0]?.password)) {
       return res.sendStatus(401);
     }

@@ -1,6 +1,6 @@
 import { stripHtml } from 'string-strip-html';
 
-const sanitizeDatas = (req, _res, next) => {
+export const sanitizeDatas = (req, _res, next) => {
   if (!req.body) next();
 
   Object.keys(req.body).forEach((key) => {
@@ -11,5 +11,3 @@ const sanitizeDatas = (req, _res, next) => {
 
   next();
 };
-
-export default sanitizeDatas;

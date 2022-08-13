@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { allowLogin, createUser } from '../controllers/authController.js';
-import sanitizeDatas from '../middlewares/dataSanitizationMiddleware.js';
+import { sanitizeDatas } from '../middlewares/dataSanitizationMiddleware.js';
 import { validateSchema } from '../middlewares/schemaValidate.js';
 import { signInSchema, signUpSchema } from '../schemas/authSchemas.js';
 
