@@ -14,3 +14,13 @@ export const getTagsTrending = async (_req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getPostsByHashtag = async (req, res) => {
+  const { hashtag } = req.params;
+  try {
+    const { rows: posts } = await hashtagsRepository.getPostsByHashtag(hashtag);
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
