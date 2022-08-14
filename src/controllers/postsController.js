@@ -35,7 +35,12 @@ export const publishPosts = async (req, res) => {
 
 export const deletePosts = async (req, res) => {
   const { id: postId } = req.params;
+  const { userId } = res.locals;
   try {
+    const { rows: user } = await postsRepository.getPostUser(postId);
+    if (user[0]?.user_id !== userId) {
+      return res.status(401).send('You can only edit your own posts!');
+    }
     await metadatasRepository.deleteMetadataByPostId(postId);
     await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
     await postsRepository.deletePostById(postId);
@@ -106,7 +111,7 @@ export const updatePostDescription = async (req, res) => {
       return res.status(401).send('You can only edit your own posts!');
     }
     await postsRepository.updatePostDescription(postId, text);
-
+    await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
     const { rows: hashtags } = await hashtagsRepository.getHashtags();
     await handleHashtags(hashtags, text, postId);
     res.status(200).send('Ok');
