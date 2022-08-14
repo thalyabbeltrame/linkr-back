@@ -106,7 +106,7 @@ export const updatePostDescription = async (req, res) => {
       return res.status(401).send('You can only edit your own posts!');
     }
     await postsRepository.updatePostDescription(postId, text);
-
+    await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
     const { rows: hashtags } = await hashtagsRepository.getHashtags();
     await handleHashtags(hashtags, text, postId);
     res.status(200).send('Ok');
