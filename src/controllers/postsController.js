@@ -39,7 +39,7 @@ export const deletePosts = async (req, res) => {
   try {
     const { rows: user } = await postsRepository.getPostUser(postId);
     if (user[0]?.user_id !== userId) {
-      return res.status(401).send('You can only edit your own posts!');
+      return res.status(401).send('You can only delete your own posts!');
     }
     await metadatasRepository.deleteMetadataByPostId(postId);
     await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
