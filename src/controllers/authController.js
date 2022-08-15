@@ -28,6 +28,7 @@ export const allowLogin = async (req, res) => {
     const token = createToken({ id: user[0].id, email, password });
     const userData = {
       user: {
+        id: user[0].id,
         username: user[0].username,
         image: user[0].avatar,
       },
