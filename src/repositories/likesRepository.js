@@ -29,3 +29,13 @@ export const dislikePost = async (likeId) => {
     [likeId]
   );
 };
+
+export const deleteLikesByPostIdAndUserId = async (postId, userId) => {
+  return await connection.query(
+    `
+      DELETE FROM likes
+      WHERE post_id = $1 AND user_id = $2
+    `,
+    [postId, userId]
+  );
+};

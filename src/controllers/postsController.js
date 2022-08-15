@@ -43,6 +43,7 @@ export const deletePosts = async (req, res) => {
     }
     await metadatasRepository.deleteMetadataByPostId(postId);
     await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
+    await likesRepository.deleteLikesByPostIdAndUserId(postId, userId);
     await postsRepository.deletePostById(postId);
     res.status(200).send('Deleted');
   } catch (error) {
