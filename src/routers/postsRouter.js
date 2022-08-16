@@ -8,6 +8,7 @@ import {
   likeDislikePost,
   publishPosts,
   updatePostDescription,
+  catchIsFollowed
 } from '../controllers/postsController.js';
 import { sanitizeDatas } from '../middlewares/dataSanitizationMiddleware.js';
 import { validateSchema } from '../middlewares/schemaValidate.js';
@@ -29,5 +30,6 @@ postsRouter.post('/posts/:id/likeDislike', validateToken, likeDislikePost);
 postsRouter.get('/hashtag/:hashtag', validateToken, getPostsByHashtag);
 postsRouter.get('/user-posts/:id', getPostsByUserId);
 postsRouter.put('/post/update/:postId', validateToken, updatePostDescription);
+postsRouter.get('/timeline/isfollowed', validateToken, catchIsFollowed);
 
 export default postsRouter;
