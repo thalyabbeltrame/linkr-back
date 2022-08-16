@@ -22,9 +22,16 @@ export const createUser = async (username, email, password, image) => {
 export const getUsersListByName = async (name) => {
   return await connection.query(
     `
-      SELECT * FROM users 
-      WHERE users.username 
-      ILIKE '${name}%'
+  SELECT u.id, u.username, 
+  (SELECT CASE WHEN f.follower_id = 1 THEN 1
+      ELSE 0
+      END) as follow, u.avatar
+  FROM users u
+  JOIN follows f
+  ON u.id = f.user_id
+  WHERE u.username 
+  ILIKE '${name}%'
+  ORDER BY follow DESC;
     `
   );
 };
