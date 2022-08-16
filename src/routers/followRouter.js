@@ -5,9 +5,9 @@ import { validateToken } from '../middlewares/tokenMiddleware.js';
 
 const followRouter = Router();
 
-followRouter.get('/user/:followerId/isFollowed', validateToken, getFollower);
-followRouter.post('/user/:followerId/follow', validateToken, follow);
-followRouter.delete('/user/:followerId/unfollow', validateToken, unfollow);
+followRouter.get('/user/:followedId/isFollowed', validateToken, getFollower);
+followRouter.post('/user/:followedId/follow', validateToken, follow);
+followRouter.delete('/user/:followedId/unfollow', validateToken, unfollow);
 
 
 export default followRouter;
