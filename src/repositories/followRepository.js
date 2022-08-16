@@ -1,27 +1,27 @@
 import connection from '../database/postgres.js';
 
-export const getFollow = async (followerId, myId) => {
+export const getFollow = async (followedId, myId) => {
     return await connection.query(`
   SELECT * from follows f
-  WHERE f.user_id = $1 
-  AND f.follower_id = $2`, [myId, followerId]);
+  WHERE f.follower_id = $1 
+  AND f.followed_id = $2`, [myId, followedId]);
 };
 
-export const followUser = async (followerId, myId) => {
+export const followUser = async (followedId, myId) => {
     return await connection.query(
         `
-        INSERT INTO follows (user_id, follower_id)
+        INSERT INTO follows (follower_id, followed_id)
         VALUES ($1, $2)
       `,
-        [myId, followerId]
+        [myId, followedId]
     );
 };
 
-export const unfollowUser = async (followerId, myId) => {
+export const unfollowUser = async (followedId, myId) => {
     return await connection.query(
         `
         DELETE FROM follows f
-        WHERE f.user_id = $1 
-        AND f.follower_id = $2`, [myId, followerId]
+        WHERE f.follower_id = $1 
+        AND f.followed_id = $2`, [myId, followedId]
     );
 };
