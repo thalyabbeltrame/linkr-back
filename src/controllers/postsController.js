@@ -1,3 +1,4 @@
+import * as commentsRepository from '../repositories/commentsRepository.js';
 import * as hashtagsRepository from '../repositories/hashtagsRepository.js';
 import * as likesRepository from '../repositories/likesRepository.js';
 import * as metadatasRepository from '../repositories/metadatasRepository.js';
@@ -115,6 +116,34 @@ export const updatePostDescription = async (req, res) => {
     await hashtagsRepository.deleteHashtagsPostsByPostId(postId);
     const { rows: hashtags } = await hashtagsRepository.getHashtags();
     await handleHashtags(hashtags, text, postId);
+    res.status(200).send('Ok');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getCommentsByPostId = async (req, res) => {
+  const { userId } = res.locals;
+  const { id: postId } = req.params;
+
+  try {
+    const { rows: comments } = await commentsRepository.getCommentsByPostId(
+      userId,
+      postId
+    );
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const postComment = async (req, res) => {
+  const { id: postId } = req.params;
+  const { userId } = res.locals;
+  const { comment } = req.body;
+
+  try {
+    await commentsRepository.postComment(postId, userId, comment);
     res.status(200).send('Ok');
   } catch (error) {
     res.status(500).json({ error: error.message });
