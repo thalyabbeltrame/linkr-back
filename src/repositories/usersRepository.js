@@ -28,7 +28,7 @@ export const getUsersListByName = async (id, name) => {
       END) as follow, u.avatar
   FROM users u
   JOIN follows f
-  ON u.id = f.user_id
+  ON u.id = f.followed_id
   WHERE u.username 
   ILIKE $2
   ORDER BY follow DESC;

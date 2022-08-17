@@ -2,7 +2,6 @@ import * as usersRepository from '../repositories/usersRepository.js';
 
 export const getUsersListByName = async (req, res) => {
   const { name, id } = req.params;
-
   if (!name) {
     return res.status(403).send('Param can be not empaty');
   }
