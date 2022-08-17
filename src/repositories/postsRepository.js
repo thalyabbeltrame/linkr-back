@@ -176,7 +176,7 @@ export const getIsFollowed = async (user_id) => {
     `
       SELECT *  
       FROM follows  
-      WHERE follows.followed_id = $1
+      WHERE follows.follower_id = $1
     `,
     [user_id]
   );
