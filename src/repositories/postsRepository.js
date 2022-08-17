@@ -33,7 +33,7 @@ export const getPosts = async (user_id) => {
       JOIN metadatas m ON m.post_id = p.id
       WHERE u.id in (
         SELECT
-        follower_id from follows where user_id = $1
+        follower_id from follows where followed_id = $1
         )
       ORDER BY p.created_at DESC
       LIMIT 20      
@@ -166,7 +166,7 @@ export const getIsFollowed = async (user_id) => {
     `
       SELECT *  
       FROM follows  
-      WHERE follows.user_id = $1
+      WHERE follows.followed_id = $1
     `,
     [user_id]
   );
