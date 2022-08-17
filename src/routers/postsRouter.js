@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+  catchIsFollowed,
   catchPosts,
   deletePosts,
   getCommentsByPostId,
@@ -40,5 +41,6 @@ postsRouter.post(
   sanitizeDatas,
   postComment
 );
+postsRouter.get('/timeline/isfollowed', validateToken, catchIsFollowed);
 
 export default postsRouter;

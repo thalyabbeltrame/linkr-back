@@ -1,6 +1,6 @@
 import connection from '../database/postgres.js';
 
-export const getPosts = async () => {
+export const getPosts = async (user_id) => {
   return await connection.query(
     `
       SELECT
@@ -34,9 +34,13 @@ export const getPosts = async () => {
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
+      WHERE u.id in (
+        SELECT
+        follower_id from follows where followed_id = $1
+        )
       ORDER BY p.created_at DESC
       LIMIT 20      
-    `
+    `, [user_id]
   );
 };
 
@@ -163,5 +167,16 @@ export const getPostUser = async (postId) => {
       WHERE p.id = $1
     `,
     [postId]
+  );
+};
+
+export const getIsFollowed = async (user_id) => {
+  return await connection.query(
+    `
+      SELECT *  
+      FROM follows  
+      WHERE follows.followed_id = $1
+    `,
+    [user_id]
   );
 };
