@@ -8,8 +8,18 @@ import { getMetadatas } from '../utils/urlMetadata.js';
 
 export const catchPosts = async (_req, res) => {
   try {
-    const { rows: posts } = await postsRepository.getPosts();
-    res.status(200).json(posts);
+    const user_id = res.locals.userId
+    const { rows: posts } = await postsRepository.getPosts(user_id);
+    const { rows: response } = await postsRepository.getIsFollowed(user_id);
+    if (response.length === 0) {
+      return res.status(205).json(posts);
+    }
+    if (response.length > 0) {
+      return res.status(210).json(posts);
+    }
+    if (posts.length > 0) {
+      return res.status(200).json(posts);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -116,6 +126,16 @@ export const updatePostDescription = async (req, res) => {
     const { rows: hashtags } = await hashtagsRepository.getHashtags();
     await handleHashtags(hashtags, text, postId);
     res.status(200).send('Ok');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const catchIsFollowed = async (_req, res) => {
+  try {
+    const user_id = res.locals.userId
+    const { rows: followers } = await postsRepository.getIsFollowed(user_id);
+    res.status(200).json(followers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
