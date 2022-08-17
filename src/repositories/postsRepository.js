@@ -27,7 +27,10 @@ export const getPosts = async (user_id) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes, 
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
@@ -68,7 +71,10 @@ export const getPostsByHashtag = async (hashtag) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes,
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
@@ -109,7 +115,10 @@ export const getPostsByUserId = async (id) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes,
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
