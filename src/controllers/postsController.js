@@ -11,7 +11,9 @@ export const catchPosts = async (req, res) => {
   const { offset } = req.params;
   try {
     const user_id = res.locals.userId;
+    console.log(user_id)
     const { rows: posts } = await postsRepository.getPosts(user_id, offset);
+    console.log(posts)
     const { rows: response } = await postsRepository.getIsFollowed(user_id);
     if (response.length === 0) {
       return res.status(205).json(posts);

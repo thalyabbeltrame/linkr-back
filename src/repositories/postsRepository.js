@@ -3,47 +3,91 @@ import connection from '../database/postgres.js';
 export const getPosts = async (_id, offset) => {
   return await connection.query(
     `
-      SELECT
-        p.id,
-        p.link,
-        p.text,
-        u.id AS user_id,
-        u.username,
-        u.avatar,
-        m.title,
-        m.image,
-        m.description,
-        p.created_at,
-        (
-          SELECT 
-            CASE
-              WHEN COUNT(*) > 0 THEN
-              json_agg(json_build_object(
-                'userId', u.id,
-                'username', u.username
-              ))
-              ELSE
-              '[]'
-            END
-          FROM likes l
-          JOIN users u ON u.id = l.user_id
-          WHERE l.post_id = p.id
-        ) AS likes, 
-        (
-          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
-        ) AS comments_count,
-        (
-          SELECT COUNT(*)::int FROM reposts r  WHERE r.post_id = p.id
-        ) AS reposts_count
-      FROM posts p
-      JOIN users u ON u.id = p.user_id
-      JOIN metadatas m ON m.post_id = p.id
-      WHERE u.id in (
-        SELECT
-        followed_id from follows where follower_id = $1
-        )
-      ORDER BY p.created_at DESC
-      OFFSET $2 LIMIT 10
+    SELECT
+    p.id,
+    p.link,
+    p.text,
+    u.id AS user_id,
+    u.username,
+    u.avatar,
+    m.title,
+    m.image,
+    m.description,
+    p.created_at,
+    (
+      SELECT 
+        CASE
+          WHEN COUNT(*) > 0 THEN
+          json_agg(json_build_object(
+            'userId', u.id,
+            'username', u.username
+          ))
+          ELSE
+          '[]'
+        END
+      FROM likes l
+      JOIN users u ON u.id = l.user_id
+      WHERE l.post_id = p.id
+    ) AS likes, 
+    (
+      SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+    ) AS comments_count,
+    (
+      SELECT COUNT(*)::int FROM reposts r  WHERE r.post_id = p.id
+    ) AS reposts_count,
+FALSE as is_repost,
+null as reposted_by
+  FROM posts p
+  JOIN users u ON u.id = p.user_id
+  JOIN metadatas m ON m.post_id = p.id
+  WHERE u.id in (
+    SELECT
+    followed_id from follows where follower_id = $1
+    )
+UNION ALL
+SELECT 
+p.id,
+    p.link,
+    p.text,
+    u.id AS user_id,
+    u.username,
+    u.avatar,
+    m.title,
+    m.image,
+    m.description,
+    p.created_at,
+    (
+      SELECT 
+        CASE
+          WHEN COUNT(*) > 0 THEN
+          json_agg(json_build_object(
+            'userId', u.id,
+            'username', u.username
+          ))
+          ELSE
+          '[]'
+        END
+      FROM likes l
+      JOIN users u ON u.id = l.user_id
+      WHERE l.post_id = p.id
+    ) AS likes, 
+    (
+      SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+    ) AS comments_count,
+    (
+      SELECT COUNT(*)::int FROM reposts r  WHERE r.post_id = p.id
+    ) AS reposts_count,
+TRUE as is_repost,
+u1.username as reposted_by
+  FROM reposts r
+  JOIN posts p
+  ON r.post_id = p.id
+  JOIN users u
+  ON u.id = p.user_id
+  JOIN metadatas m ON m.post_id = p.id
+  JOIN users u1 ON r.user_id = u1.id
+  ORDER BY created_at DESC
+  OFFSET $2 LIMIT 10
     `,
     [_id, (offset - 1) * 10]
   );
