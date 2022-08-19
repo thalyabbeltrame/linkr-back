@@ -43,6 +43,6 @@ postsRouter.post(
   postComment
 );
 postsRouter.get('/timeline/isfollowed', validateToken, catchIsFollowed);
-postsRouter.get('/newPosts/:postId', validateToken, catchNewPosts);
+postsRouter.get('/newPosts/:timestamp', validateToken, catchNewPosts);
 
 export default postsRouter;

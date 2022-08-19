@@ -1,5 +1,5 @@
-import { decodeToken } from '../utils/jwtToken.js';
 import * as usersRepository from '../repositories/usersRepository.js';
+import { decodeToken } from '../utils/jwtToken.js';
 
 export const validateToken = async (req, res, next) => {
   const token = req.header('Authorization')?.split('Bearer ')[1];
