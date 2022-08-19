@@ -30,7 +30,10 @@ export const getPosts = async (user_id) => {
         ) AS likes, 
         (
           SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
-        ) AS comments_count
+        ) AS comments_count,
+        (
+          SELECT COUNT(*)::int FROM reposts r  WHERE r.post_id = p.id
+        ) AS reposts_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
