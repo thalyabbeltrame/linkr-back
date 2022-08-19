@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import {
   catchIsFollowed,
+  catchNewPosts,
   catchPosts,
   deletePosts,
   getCommentsByPostId,
@@ -31,7 +32,7 @@ postsRouter.post(
 postsRouter.delete('/delete/:id', validateToken, deletePosts);
 postsRouter.post('/posts/:id/likeDislike', validateToken, likeDislikePost);
 postsRouter.get('/hashtag/:hashtag/:offset', validateToken, getPostsByHashtag);
-postsRouter.get('/user-posts/:id/:offset', getPostsByUserId);
+postsRouter.get('/user-posts/:id/:offset', validateToken, getPostsByUserId);
 postsRouter.put('/post/update/:postId', validateToken, updatePostDescription);
 postsRouter.get('/posts/:id/comments', validateToken, getCommentsByPostId);
 postsRouter.post(
@@ -42,5 +43,6 @@ postsRouter.post(
   postComment
 );
 postsRouter.get('/timeline/isfollowed', validateToken, catchIsFollowed);
+postsRouter.get('/newPosts/:postId', validateToken, catchNewPosts);
 
 export default postsRouter;

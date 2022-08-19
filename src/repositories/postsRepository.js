@@ -13,6 +13,7 @@ export const getPosts = async (_id, offset) => {
         m.title,
         m.image,
         m.description,
+        p.created_at,
         (
           SELECT 
             CASE
@@ -43,7 +44,8 @@ export const getPosts = async (_id, offset) => {
         )
       ORDER BY p.created_at DESC
       OFFSET $2 LIMIT 10
-    `,[_id, (offset-1) * 10]
+    `,
+    [_id, (offset - 1) * 10]
   );
 };
 
@@ -60,6 +62,7 @@ export const getPostsByHashtag = async (hashtag, offset) => {
         m.title,
         m.image,
         m.description,
+        p.created_at,
         (
           SELECT 
             CASE
@@ -87,7 +90,7 @@ export const getPostsByHashtag = async (hashtag, offset) => {
       ORDER BY p.created_at DESC
       OFFSET $2 LIMIT 10
     `,
-    [hashtag, (offset-1) * 10]
+    [hashtag, (offset - 1) * 10]
   );
 };
 
@@ -104,6 +107,7 @@ export const getPostsByUserId = async (id, offset) => {
         m.title,
         m.image,
         m.description,
+        p.created_at,
         (
           SELECT 
             CASE
@@ -182,5 +186,23 @@ export const getIsFollowed = async (user_id) => {
       WHERE follows.follower_id = $1
     `,
     [user_id]
+  );
+};
+
+export const getNewPosts = async (userId, postId) => {
+  return await connection.query(
+    `
+      SELECT
+        COUNT(*)::int AS posts_count
+      FROM posts p
+      JOIN users u ON u.id = p.user_id
+      JOIN metadatas m ON m.post_id = p.id
+      WHERE u.id in (
+        SELECT
+        followed_id from follows where follower_id = $1
+        )
+      AND p.id > $2
+    `,
+    [userId, postId]
   );
 };

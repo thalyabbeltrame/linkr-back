@@ -8,10 +8,8 @@ import { handleHashtags } from '../utils/handleHashtags.js';
 import { getMetadatas } from '../utils/urlMetadata.js';
 
 export const catchPosts = async (req, res) => {
-
   const { offset } = req.params;
   try {
-
     const user_id = res.locals.userId;
     const { rows: posts } = await postsRepository.getPosts(user_id, offset);
     const { rows: response } = await postsRepository.getIsFollowed(user_id);
@@ -88,7 +86,10 @@ export const likeDislikePost = async (req, res) => {
 export const getPostsByHashtag = async (req, res) => {
   const { hashtag, offset } = req.params;
   try {
-    const { rows: posts } = await postsRepository.getPostsByHashtag(hashtag, offset);
+    const { rows: posts } = await postsRepository.getPostsByHashtag(
+      hashtag,
+      offset
+    );
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -101,7 +102,10 @@ export const getPostsByUserId = async (req, res) => {
     return res.status(403).send('Param can be not empty');
   }
   try {
-    const { rows: posts_list } = await postsRepository.getPostsByUserId(id, offset);
+    const { rows: posts_list } = await postsRepository.getPostsByUserId(
+      id,
+      offset
+    );
     const { rows: user } = await usersRepository.getUserById(id);
     if (!user) {
       return res.sendStatus(404);
@@ -168,6 +172,17 @@ export const catchIsFollowed = async (_req, res) => {
     const user_id = res.locals.userId;
     const { rows: followers } = await postsRepository.getIsFollowed(user_id);
     res.status(200).json(followers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const catchNewPosts = async (req, res) => {
+  const { postId } = req.params;
+  const { userId } = res.locals;
+  try {
+    const { rows: posts } = await postsRepository.getNewPosts(userId, postId);
+    res.status(200).json(posts[0].posts_count);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
