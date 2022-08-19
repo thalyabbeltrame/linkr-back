@@ -13,6 +13,6 @@ router.use('/', userRouter);
 router.use('/', postsRouter);
 router.use('/', hashTagsRouter);
 router.use('/', followRouter);
-router.use('/', repostRouter)
+router.use('/', repostRouter);
 
 export default router;

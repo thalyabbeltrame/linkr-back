@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+
 import connection from '../database/postgres.js';
 
 export const getUserByEmail = async (email) => {
@@ -21,17 +22,21 @@ export const createUser = async (username, email, password, image) => {
 export const getUsersListByName = async (id, name) => {
   return await connection.query(
     `
-    SELECT u.id, u.username,
-    ( select count(*) 
-    from follows f
-    where f.followed_id = u.id
-    and f.follower_id = $1) as follow, u.avatar
-    FROM users u
-    WHERE u.username 
-    ILIKE $2
-    ORDER BY follow DESC
-    , u.username ASC;
-    `, [id, `${name}%`]
+      SELECT 
+        u.id, 
+        u.username,
+        (SELECT count(*) 
+          FROM follows f
+          WHERE f.followed_id = u.id
+          AND f.follower_id = $1
+        ) as follow, 
+        u.avatar
+      FROM users u
+      WHERE u.username 
+      ILIKE $2
+      ORDER BY follow DESC, u.username ASC;
+    `,
+    [id, `${name}%`]
   );
 };
 export const getUserById = async (id) => {
