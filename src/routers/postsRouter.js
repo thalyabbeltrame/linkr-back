@@ -16,7 +16,7 @@ import { postSchema } from '../schemas/postSchemas.js';
 
 const postsRouter = Router();
 
-postsRouter.get('/timeline', validateToken, catchPosts);
+postsRouter.get('/timeline/:offset', validateToken, catchPosts);
 postsRouter.post(
   '/timeline',
   validateToken,
@@ -26,8 +26,8 @@ postsRouter.post(
 );
 postsRouter.delete('/delete/:id', validateToken, deletePosts);
 postsRouter.post('/posts/:id/likeDislike', validateToken, likeDislikePost);
-postsRouter.get('/hashtag/:hashtag', validateToken, getPostsByHashtag);
-postsRouter.get('/user-posts/:id', getPostsByUserId);
+postsRouter.get('/hashtag/:hashtag/:offset', validateToken, getPostsByHashtag);
+postsRouter.get('/user-posts/:id/:offset', getPostsByUserId);
 postsRouter.put('/post/update/:postId', validateToken, updatePostDescription);
 
 export default postsRouter;

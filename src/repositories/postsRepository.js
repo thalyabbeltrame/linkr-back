@@ -1,6 +1,6 @@
 import connection from '../database/postgres.js';
 
-export const getPosts = async () => {
+export const getPosts = async (offset) => {
   return await connection.query(
     `
       SELECT
@@ -32,12 +32,12 @@ export const getPosts = async () => {
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
       ORDER BY p.created_at DESC
-      LIMIT 20      
-    `
+      OFFSET $1 LIMIT 10
+    `,[(offset-1) * 10]
   );
 };
 
-export const getPostsByHashtag = async (hashtag) => {
+export const getPostsByHashtag = async (hashtag, offset) => {
   return await connection.query(
     `
       SELECT
@@ -72,13 +72,13 @@ export const getPostsByHashtag = async (hashtag) => {
       JOIN hashtags h ON h.id = hp.hashtag_id
       WHERE h.name = $1
       ORDER BY p.created_at DESC
-      LIMIT 20
+      OFFSET $2 LIMIT 10
     `,
-    [hashtag]
+    [hashtag, (offset-1) * 10]
   );
 };
 
-export const getPostsByUserId = async (id) => {
+export const getPostsByUserId = async (id, offset) => {
   return await connection.query(
     `
       SELECT
@@ -111,8 +111,9 @@ export const getPostsByUserId = async (id) => {
       JOIN metadatas m ON m.post_id = p.id
       WHERE u.id = $1
       ORDER BY p.created_at DESC
+      OFFSET $2 LIMIT 10
     `,
-    [id]
+    [id, (offset - 1) * 10]
   );
 };
 

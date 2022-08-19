@@ -6,9 +6,11 @@ import * as usersRepository from '../repositories/usersRepository.js';
 import { handleHashtags } from '../utils/handleHashtags.js';
 import { getMetadatas } from '../utils/urlMetadata.js';
 
-export const catchPosts = async (_req, res) => {
+export const catchPosts = async (req, res) => {
+
+  const { offset } = req.params;
   try {
-    const { rows: posts } = await postsRepository.getPosts();
+    const { rows: posts } = await postsRepository.getPosts(offset);
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -72,9 +74,9 @@ export const likeDislikePost = async (req, res) => {
 };
 
 export const getPostsByHashtag = async (req, res) => {
-  const { hashtag } = req.params;
+  const { hashtag, offset } = req.params;
   try {
-    const { rows: posts } = await postsRepository.getPostsByHashtag(hashtag);
+    const { rows: posts } = await postsRepository.getPostsByHashtag(hashtag, offset);
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -82,12 +84,12 @@ export const getPostsByHashtag = async (req, res) => {
 };
 
 export const getPostsByUserId = async (req, res) => {
-  const { id } = req.params;
-  if (!id) {
+  const { id, offset } = req.params;
+  if (!id || !offset) {
     return res.status(403).send('Param can be not empty');
   }
   try {
-    const { rows: posts_list } = await postsRepository.getPostsByUserId(id);
+    const { rows: posts_list } = await postsRepository.getPostsByUserId(id, offset);
     const { rows: user } = await usersRepository.getUserById(id);
     if (!user) {
       return res.sendStatus(404);

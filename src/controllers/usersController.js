@@ -7,7 +7,7 @@ export const getUsersListByName = async (req, res) => {
   }
   try {
     const { rows: list } = await usersRepository.getUsersListByName(id, name);
-    res.send(list);
+    res.status(200).send(list);
   } catch (error) {
     console.log(error)
     res.status(500).send(error);
