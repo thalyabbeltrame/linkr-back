@@ -1,3 +1,4 @@
+import * as commentsRepository from '../repositories/commentsRepository.js';
 import * as hashtagsRepository from '../repositories/hashtagsRepository.js';
 import * as likesRepository from '../repositories/likesRepository.js';
 import * as metadatasRepository from '../repositories/metadatasRepository.js';
@@ -10,8 +11,19 @@ export const catchPosts = async (req, res) => {
 
   const { offset } = req.params;
   try {
-    const { rows: posts } = await postsRepository.getPosts(offset);
-    res.status(200).json(posts);
+
+    const user_id = res.locals.userId;
+    const { rows: posts } = await postsRepository.getPosts(user_id, offset);
+    const { rows: response } = await postsRepository.getIsFollowed(user_id);
+    if (response.length === 0) {
+      return res.status(205).json(posts);
+    }
+    if (response.length > 0) {
+      return res.status(210).json(posts);
+    }
+    if (posts.length > 0) {
+      return res.status(200).json(posts);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -118,6 +130,44 @@ export const updatePostDescription = async (req, res) => {
     const { rows: hashtags } = await hashtagsRepository.getHashtags();
     await handleHashtags(hashtags, text, postId);
     res.status(200).send('Ok');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getCommentsByPostId = async (req, res) => {
+  const { userId } = res.locals;
+  const { id: postId } = req.params;
+
+  try {
+    const { rows: comments } = await commentsRepository.getCommentsByPostId(
+      userId,
+      postId
+    );
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const postComment = async (req, res) => {
+  const { id: postId } = req.params;
+  const { userId } = res.locals;
+  const { comment } = req.body;
+
+  try {
+    await commentsRepository.postComment(postId, userId, comment);
+    res.status(200).send('Ok');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const catchIsFollowed = async (_req, res) => {
+  try {
+    const user_id = res.locals.userId;
+    const { rows: followers } = await postsRepository.getIsFollowed(user_id);
+    res.status(200).json(followers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

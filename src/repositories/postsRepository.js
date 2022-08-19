@@ -1,6 +1,6 @@
 import connection from '../database/postgres.js';
 
-export const getPosts = async (offset) => {
+export const getPosts = async (_id, offset) => {
   return await connection.query(
     `
       SELECT
@@ -27,13 +27,20 @@ export const getPosts = async (offset) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes, 
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
+      WHERE u.id in (
+        SELECT
+        followed_id from follows where follower_id = $1
+        )
       ORDER BY p.created_at DESC
-      OFFSET $1 LIMIT 10
-    `,[(offset-1) * 10]
+      OFFSET $2 LIMIT 10
+    `,[_id, (offset-1) * 10]
   );
 };
 
@@ -64,7 +71,10 @@ export const getPostsByHashtag = async (hashtag, offset) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes,
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
@@ -105,7 +115,10 @@ export const getPostsByUserId = async (id, offset) => {
           FROM likes l
           JOIN users u ON u.id = l.user_id
           WHERE l.post_id = p.id
-        ) AS likes
+        ) AS likes,
+        (
+          SELECT COUNT(*)::int FROM comments c WHERE c.post_id = p.id
+        ) AS comments_count
       FROM posts p
       JOIN users u ON u.id = p.user_id
       JOIN metadatas m ON m.post_id = p.id
@@ -155,5 +168,16 @@ export const getPostUser = async (postId) => {
       WHERE p.id = $1
     `,
     [postId]
+  );
+};
+
+export const getIsFollowed = async (user_id) => {
+  return await connection.query(
+    `
+      SELECT *  
+      FROM follows  
+      WHERE follows.follower_id = $1
+    `,
+    [user_id]
   );
 };
